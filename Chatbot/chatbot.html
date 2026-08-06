@@ -2,6 +2,47 @@
 <html>
 <head>
   <title>Chatbot</title>
+  <style>
+
+    .send-button {
+      background-color: rgb(25, 135, 84);
+      color: white;
+      padding: 12px 20px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .chat-input {
+      padding: 12px 15px;
+      border-radius: 10px;
+      border-width: 1px;
+      font-size: 15px;
+      flex-grow: 1;
+    }
+
+    .chat-input-container {
+      display: flex;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .app-container {
+      max-width: 600px;
+    }
+
+    .chat-message-user {
+      display: flex;
+      justify-content: end;
+    }
+
+    .chat-message-text {
+      background-color: rgb(238, 238, 238);
+    }
+
+  </style>
 </head>
 <body>
   <div class="js-container"></div>
@@ -53,16 +94,17 @@
       }
 
       return (
-        <>
+        <div className="chat-input-container">
           <input 
             placeholder="Send a Message to Chatbot" 
             size="30" 
             value={inputText} 
             onChange={saveInputText}
             onKeyDown={sendMessage}
+            className="chat-input"
           />
-          <button onClick={sendMessage}>Send</button>
-        </>
+          <button onClick={sendMessage} className="send-button">Send</button>
+        </div>
       );
     }
 
@@ -71,15 +113,19 @@
       const sender = props.sender;
       if (sender === 'robot') {
         return (
-          <div>
+          <div className={sender === 'user' ? 'chat-message-user' : 'chat-message-robot'}>
             <img src="robot_image.png" width="50" />
-            {message}
+            <div className="chat-message-text">
+              {message}
+            </div>
           </div>
         );
       } else {
         return (
-          <div>
-            {message}
+          <div className={sender === 'user' ? 'chat-message-user' : 'chat-message-robot'}>
+            <div className="chat-message-text">
+              {message}
+            </div>
             <img src="person_image.png" width="50" />
           </div>
         );
@@ -107,10 +153,10 @@
       ]);
 
       return (
-        <>
+        <div className="app-container">
           <ChatInput chatMessages={chatMessages} setChatMessages={setChatMessages} />
           <ChatMessages chatMessages={chatMessages} />
-        </>
+        </div>
       );
     }
 
