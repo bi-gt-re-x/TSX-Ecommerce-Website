@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import {Chatbot} from 'supersimpledev';
-import './App.css'
+import { useState, useRef, useEffect } from 'react';
+import { Chatbot } from 'supersimpledev';
+import './App.css';
 
 function ChatInput({ chatMessages, setChatMessages }) {
   const [inputText, setInputText] = useState('');
@@ -11,33 +11,34 @@ function ChatInput({ chatMessages, setChatMessages }) {
 
   async function sendMessage(event) {
     if (event.key === 'Enter' || event.type === 'click') {
-        const newChatMessages = ([
+      if (!inputText.trim()) return;
+
+      const newChatMessages = [
         ...chatMessages,
         {
-            message: inputText,
-            sender: 'user',
-            id: crypto.randomUUID(),
+          message: inputText,
+          sender: 'user',
+          id: crypto.randomUUID(),
         }
-        ]);
+      ];
 
-        if (!inputText.trim()) return; 
+      setChatMessages(newChatMessages);
+      setInputText('');
 
-        const response = await Chatbot.getResponseAsync(inputText);
+      const response = await Chatbot.getResponseAsync(inputText);
 
-        setChatMessages([
+      setChatMessages([
         ...newChatMessages,
         {
-            message: response,
-            sender: 'robot',
-            id: crypto.randomUUID(),
+          message: response,
+          sender: 'robot',
+          id: crypto.randomUUID(),
         }
-        ]);
-
-        setInputText(''); 
+      ]);
     }
 
     else if (event.key === 'Escape') {
-        setInputText('');
+      setInputText('');
     }
   }
 
@@ -62,7 +63,7 @@ function ChatMessage(props) {
   if (sender === 'robot') {
     return (
       <div className={sender === 'user' ? 'chat-message-user' : 'chat-message-robot'}>
-        <img className="chat-message-profile" src="robot_image.png" />
+        <img className="chat-message-profile" src="/robot_image.png" alt="Robot" />
         <div className="chat-message-text">
           {message}
         </div>
@@ -74,16 +75,16 @@ function ChatMessage(props) {
         <div className="chat-message-text">
           {message}
         </div>
-        <img className="chat-message-profile" src="person_image.png"/>
+        <img className="chat-message-profile" src="/person_image.png" alt="You" />
       </div>
     );
   }
 }
 
 function ChatMessages({ chatMessages }) {
-  const chatMessagesRef = React.useRef(null);
+  const chatMessagesRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const containerElem = chatMessagesRef.current;
     if (containerElem) {
       containerElem.scrollTop = containerElem.scrollHeight;
@@ -118,4 +119,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
