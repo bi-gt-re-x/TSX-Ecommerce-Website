@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { formatMoney } from "../utils/money";
 import "./checkout-header.css";
@@ -94,10 +95,12 @@ export function CheckoutPage({ cart }) {
                             />
                             <div>
                               <div className="delivery-option-date">
-                                Tuesday, June 21
+                                {dayjs(deliveryOption.estimatedDeliveryTimeMs).format("dddd, MMMM D")}
                               </div>
                               <div className="delivery-option-price">
-                                FREE Shipping
+                                {deliveryOption.priceCents === 0
+                                  ? "FREE Shipping"
+                                  : `${formatMoney(deliveryOption.priceCents)} - Shipping`}
                               </div>
                             </div>
                           </div>
