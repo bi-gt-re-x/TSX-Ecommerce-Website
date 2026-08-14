@@ -11,9 +11,12 @@ function App() {
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
-        axios.get('/api/cart-items?expand=product').then((response) => {
+        const fetchAppData = async () => {
+            const response = await axios.get('/api/cart-items?expand=product')
             setCart(response.data);
-        });
+        };
+
+        fetchAppData();
     }, []);
 
     const [products, setProducts] = useState([]);
@@ -29,7 +32,7 @@ function App() {
             <Route index element={<HomePage cart={cart} />} />
             <Route path="checkout" element={<CheckoutPage cart={cart} setCart={setCart} />} />
             <Route path="orders" element={<OrdersPage  cart={cart} products={products} />}/>
-            <Route path="tracking" element={<TrackingPage />} />
+            <Route path="tracking" element={<TrackingPage cart={cart} />} />
         </Routes>
     )
 }

@@ -54,6 +54,8 @@ export function OrdersPage({ cart, products }) {
                         (product) => product.id === orderProduct.productId
                     );
 
+                    const link = "/tracking/" + order.id + "/" + orderProduct.productId;
+
                     return (
                       <Fragment key={orderProduct.productId}>
                         <div className="product-image-container">
@@ -80,7 +82,7 @@ export function OrdersPage({ cart, products }) {
                         </div>
 
                         <div className="product-actions">
-                          <Link to="/tracking">
+                          <Link to={link}>
                             <button className="track-package-button button-secondary">
                               Track package
                             </button>
