@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router';
-import { HomePage } from './Pages/HomePage.jsx';
+import { HomePage } from './Pages/Homepage/HomePage.jsx';
 import { CheckoutPage } from './Pages/Checkout/CheckoutPage.jsx';
-import { OrdersPage } from './Pages/OrdersPage.jsx';
-import { TrackingPage } from './Pages/TrackingPage.jsx';
+import { OrdersPage } from './Pages/Orders/OrdersPage.jsx';
+import { TrackingPage } from './Pages/Tracking/TrackingPage.jsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css'
@@ -16,11 +16,19 @@ function App() {
         });
     }, []);
 
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get('/api/products').then((response) => {
+            setProducts(response.data);
+        });
+    }, []);
+
     return (
         <Routes>
             <Route index element={<HomePage cart={cart} />} />
             <Route path="checkout" element={<CheckoutPage cart={cart} setCart={setCart} />} />
-            <Route path="orders" element={<OrdersPage  cart={cart} />}/>
+            <Route path="orders" element={<OrdersPage  cart={cart} products={products} />}/>
             <Route path="tracking" element={<TrackingPage />} />
         </Routes>
     )
