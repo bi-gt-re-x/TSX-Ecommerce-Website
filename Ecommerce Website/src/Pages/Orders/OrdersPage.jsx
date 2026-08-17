@@ -27,7 +27,10 @@ export function OrdersPage({ cart, products }) {
         <div className="page-title">Your Orders</div>
 
         <div className="orders-grid">
+
           {orders.map((order) => {
+            const orderId = order.id;
+            
             return (
               <div key={order.id} className="order-container">
                 <div className="order-header">
@@ -53,8 +56,7 @@ export function OrdersPage({ cart, products }) {
                     const product = products.find(
                         (product) => product.id === orderProduct.productId
                     );
-
-                    const link = "/tracking/" + order.id + "/" + orderProduct.productId;
+                    const productId = orderProduct.productId;
 
                     return (
                       <Fragment key={orderProduct.productId}>
@@ -82,7 +84,7 @@ export function OrdersPage({ cart, products }) {
                         </div>
 
                         <div className="product-actions">
-                          <Link to={link}>
+                          <Link to={`/tracking/${orderId}/${productId}`}>
                             <button className="track-package-button button-secondary">
                               Track package
                             </button>
@@ -95,6 +97,7 @@ export function OrdersPage({ cart, products }) {
               </div>
             );
           })}
+
         </div>
       </div>
     </>

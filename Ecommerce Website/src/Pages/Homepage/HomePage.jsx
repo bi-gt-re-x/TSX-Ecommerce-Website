@@ -23,7 +23,7 @@ export function HomePage({ cart }) {
             <Header cart={cart} />
 
             <div className="home-page">
-                <ProductsGrid products={products} />
+                <ProductsGrid products={products} cart={cart} />
             </div>
         </>
     );

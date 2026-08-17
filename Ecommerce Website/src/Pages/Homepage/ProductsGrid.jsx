@@ -1,6 +1,6 @@
 import { formatMoney } from "../../utils/money";
 
-export function ProductsGrid({ products }) {
+export function ProductsGrid({ products, cart }) {
   return (
     <div className="products-grid">
       {products.map((product) => {
@@ -50,7 +50,10 @@ export function ProductsGrid({ products }) {
               Added
             </div>
 
-            <button className="add-to-cart-button button-primary">
+            <button 
+            className="add-to-cart-button button-primary"
+            onClick={cart.quantity += 1}
+            >
               Add to Cart
             </button>
           </div>
