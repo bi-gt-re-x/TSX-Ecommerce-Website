@@ -1,60 +1,58 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
+import { useState } from "react";
 import { DeliveryOptions } from "./DeliveryOptions";
 
 export function OrderSummary({ cart, deliveryOptions, setCart, loadCart }) {
-    return (
-        <div className="order-summary">
-            {deliveryOptions.length > 0 &&
-            cart.map((cartItem) => {
-                const selectedDeliveryOption = deliveryOptions.find(
-                (deliveryOption) => {
-                    return deliveryOption.id === cartItem.deliveryOptionId;
-                },
-                );
+  return (
+    <div className="order-summary">
+      {deliveryOptions.length > 0 && cart.map((cartItem) => {
+        const selectedDeliveryOption = deliveryOptions.find(
+          (deliveryOption) => { return deliveryOption.id === cartItem.deliveryOptionId; },
+        );
 
-                const deleteCartItem = async () => {
-                    await axios.delete(`/api/cart-items/${cartItem.productId}`);
-                    await loadCart();
-                }
+        const deleteCartItem = async () => {
+          await axios.delete(`/api/cart-items/${cartItem.productId}`);
+          await loadCart();
+        }
 
-                return (
-                <div key={cartItem.productId} className="cart-item-container">
-                    <div className="delivery-date">
-                    Delivery date:{" "}
-                    {dayjs(selectedDeliveryOption.estimatedDeliveryTimeMs).format(
-                        "dddd, MMMM D",
-                    )}
-                    </div>
+        const [update, setUpdate] = useState(false);
 
-                    <div className="cart-item-details-grid">
-                    <img className="product-image" src={cartItem.product.image} />
-
-                    <div className="cart-item-details">
-                        <div className="product-name">{cartItem.product.name}</div>
-                        <div className="product-price">
-                        {formatMoney(cartItem.product.priceCents)}
-                        </div>
-                        <div className="product-quantity">
-                        <span>
-                            Quantity:{" "}
-                            <span className="quantity-label">{cartItem.quantity}</span>
-                        </span>
-                        <span className="update-quantity-link link-primary">
-                            Update
-                        </span>
-                        <span className="delete-quantity-link link-primary"
-                        onClick={() => {deleteCartItem()}}>
-                            Delete
-                        </span>
-                        </div>
-                    </div>
-                        <DeliveryOptions cartItem={cartItem} deliveryOptions={deliveryOptions} cart={cart} setCart={setCart} loadCart={loadCart} />
-                    </div>
+        return (
+          <div key={cartItem.productId} className="cart-item-container">
+            <div className="delivery-date">
+              Delivery date:{" "}
+              {dayjs(selectedDeliveryOption.estimatedDeliveryTimeMs).format(
+                "dddd, MMMM D",
+              )}
+            </div>
+            <div className="cart-item-details-grid">
+              <img className="product-image" src={cartItem.product.image} />
+              <div className="cart-item-details">
+                <div className="product-name">{cartItem.product.name}</div>
+                <div className="product-price">
+                  {formatMoney(cartItem.product.priceCents)}
                 </div>
-                );
-            })}
-        </div>
-    );
+                <div className="product-quantity">
+                  <span style={{ display: update ? "none" : "inline"}}>
+                    Quantity:{" "}
+                    <span className="quantity-label">{cartItem.quantity}</span>
+                  </span>
+                  <input type="text" className="update-input" style={{ display: update ? "inline-block" : "none"}} />
+                  <span className="update-quantity-link link-primary" onClick={() => {setUpdate(true)}}>
+                    Update
+                  </span>
+                  <span className="delete-quantity-link link-primary" onClick={() => {deleteCartItem()}}>
+                    Delete
+                  </span>
+                </div>
+              </div>
+              <DeliveryOptions cartItem={cartItem} deliveryOptions={deliveryOptions} cart={cart} setCart={setCart} loadCart={loadCart} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
