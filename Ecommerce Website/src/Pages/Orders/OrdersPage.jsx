@@ -6,7 +6,7 @@ import { formatMoney } from "../../utils/money";
 import { Link } from "react-router";
 import "./OrdersPage.css";
 
-export function OrdersPage({ cart, products }) {
+export function OrdersPage({ cart, products, loadCart }) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -72,7 +72,11 @@ export function OrdersPage({ cart, products }) {
                             Arriving on: {dayjs(orderProduct.estimatedDeliveryTimeMs).format('MMMM D')}
                           </div>
                           <div className="product-quantity">Quantity: {orderProduct.quantity}</div>
-                          <button className="buy-again-button button-primary">
+                          <button className="buy-again-button button-primary" 
+                          onClick={() => {
+                            orderProduct.quantity += 1;
+                            loadCart();
+                          }}>
                             <img
                               className="buy-again-icon"
                               src="images/icons/buy-again.png"

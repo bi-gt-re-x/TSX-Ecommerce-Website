@@ -17,7 +17,13 @@ export function OrderSummary({ cart, deliveryOptions, setCart, loadCart }) {
           await loadCart();
         }
 
+        const updateCart = async () => {
+          await axios.put(`/api/cart-items/${cartItem.productId}`, { quantity: Number(quantity) });
+          await loadCart();
+        }
+
         const [update, setUpdate] = useState(false);
+        const [quantity, setQuantity] = useState(cartItem.quantity);
 
         return (
           <div key={cartItem.productId} className="cart-item-container">
@@ -39,8 +45,32 @@ export function OrderSummary({ cart, deliveryOptions, setCart, loadCart }) {
                     Quantity:{" "}
                     <span className="quantity-label">{cartItem.quantity}</span>
                   </span>
-                  <input type="text" className="update-input" style={{ display: update ? "inline-block" : "none"}} />
-                  <span className="update-quantity-link link-primary" onClick={() => {setUpdate(true)}}>
+
+                  <input type="text" className="update-input" style={{ display: update ? "inline-block" : "none"}} value={quantity} 
+                  onChange={(event) => {
+                    setQuantity(event.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' && update === true) {
+                      updateCart();
+                      setUpdate(!update);
+                    }
+
+                    else if (event.key === 'Escape' && update === true) {
+                      setUpdate(!update);
+                    }
+                  }}
+                  />
+
+                  <span className="update-quantity-link link-primary" 
+                  onClick={
+                    () => {
+                      if (update === true) {
+                        updateCart();
+                      }
+
+                      setUpdate(!update)
+                    }}>
                     Update
                   </span>
                   <span className="delete-quantity-link link-primary" onClick={() => {deleteCartItem()}}>

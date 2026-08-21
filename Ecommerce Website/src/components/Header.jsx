@@ -1,45 +1,62 @@
+import { useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import './header.css';
-import { Link } from 'react-router';
 
 export function Header({ cart }) {
-    let totalQuantity = 0;
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchText = searchParams.get('search');
 
-    cart.forEach((cartItem) => {
-        totalQuantity += cartItem.quantity;
-    });
 
-    return (
-        <>
-            <div className="header">
-                <div className="left-section">
-                    <Link to="/" className="header-link">
-                        <img className="logo"
-                            src="images/logo-white.png" />
-                        <img className="mobile-logo"
-                            src="images/mobile-logo-white.png" />
-                    </Link>
-                </div>
+  const [search, setSearch] = useState(searchText || '');
 
-                <div className="middle-section">
-                    <input className="search-bar" type="text" placeholder="Search" />
+  const updateSearchInput = (e) => {
+    setSearch(e.target.value);
+  };
 
-                    <button className="search-button">
-                        <img className="search-icon" src="images/icons/search-icon.png" />
-                    </button>
-                </div>
+  const searchProducts = (e) => {
+    e.preventDefault();
+    navigate(`/?search=${encodeURIComponent(search)}`);
+  };
 
-                <div className="right-section">
-                    <Link className="orders-link header-link" to="/orders">
-                        <span className="orders-text">Orders</span>
-                    </Link>
+  let totalQuantity = 0;
 
-                    <Link className="cart-link header-link" to="/checkout">
-                        <img className="cart-icon" src="images/icons/cart-icon.png" />
-                        <div className="cart-quantity">{totalQuantity}</div>
-                        <div className="cart-text">Cart</div>
-                    </Link>
-                </div>
-            </div>
-        </>
-    );
+  cart.forEach((cartItem) => {
+    totalQuantity += cartItem.quantity;
+  });
+
+  return (
+    <div className="header">
+      <div className="left-section">
+        <Link to="/" className="header-link">
+          <img className="logo" src="images/logo-white.png" alt="Logo" />
+          <img className="mobile-logo" src="images/mobile-logo-white.png" alt="Mobile Logo" />
+        </Link>
+      </div>
+
+      <form className="middle-section" onSubmit={searchProducts}>
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button type="submit" className="search-button">
+          <img className="search-icon" src="images/icons/search-icon.png" alt="Search" />
+        </button>
+      </form>
+
+      <div className="right-section">
+        <Link className="orders-link header-link" to="/orders">
+          <span className="orders-text">Orders</span>
+        </Link>
+        <Link className="cart-link header-link" to="/checkout">
+          <img className="cart-icon" src="images/icons/cart-icon.png" alt="Cart" />
+          <div className="cart-quantity">{totalQuantity}</div>
+          <div className="cart-text">Cart</div>
+        </Link>
+      </div>
+    </div>
+  );
 }
